@@ -1,0 +1,17 @@
+[
+    {
+      "level": 1,
+      "requirements": {
+        "money": "45",
+        "material": "OAK_LEAVES:10"
+      }
+    },
+    {
+      "level": 2,
+      "requirements": {
+        "money": "100",
+        "material": "WHEAT:100",
+        "shards": "22"
+      }
+    }
+]

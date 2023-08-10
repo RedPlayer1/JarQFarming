@@ -1,0 +1,21 @@
+name: JarQFarming
+version: '${project.version}'
+main: me.redplayer_1.jarqfarming.JarQFarming
+api-version: '1.20'
+prefix: JQF
+authors: [RedPlayer_1]
+depend:
+  - Citizens
+description: Farming plugin for the JarQ server
+commands:
+  lookup:
+    aliases:
+      - player
+    description: Lookup a player's info
+    usage: /lookup <stat|collection> <player (optional)>
+  upgrade:
+    description: Use to upgrade a tool
+    usage: /upgrade
+  util:
+    description: util command for testing
+    usage: /util
