@@ -8,6 +8,11 @@
     <artifactId>JarqFarming</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <developers>
+        <developer>
+            <name>RedPlayer_1</name>
+        </developer>
+    </developers>
 
     <name>JarqFarming</name>
 

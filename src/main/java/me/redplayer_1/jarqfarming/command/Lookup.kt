@@ -1,16 +1,14 @@
 package me.redplayer_1.jarqfarming.command
 
-import me.redplayer_1.jarqfarming.Farmer
+import me.redplayer_1.jarqfarming.farming.Farmer
 import me.redplayer_1.jarqfarming.Manager
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.command.TabCompleter
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
-class Lookup: TabExecutor {
+internal class Lookup: TabExecutor {
     private val statString = "<bold><yellow>-------------------</bold><newline><white><b>%s</b><white><gray>'s</gray> <red>Statistics<newline><dark_red>Level<white> - <red>%d (%d/%d)<newline><dark_red>Prestige<white> - <red>%d<newline><dark_red>Money<white> - <red><dark_green>$</dark_green>%d<newline><dark_red>Shards<white> - <red>%d<newline><bold><yellow>-------------------</bold>"
     private val collectPrefix = "<bold><yellow>-------------------</bold><newline><white><b>%s</b><white><gray>'s</gray> <red>Collections"
     private val collectEntry = "<newline><dark_red>%s<white> - <red>%,d"
@@ -19,7 +17,8 @@ class Lookup: TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         //usage: /lookup <stat|collection> <player (optional)>
         //TODO: Test
-        if (sender is Player && args != null && args.isNotEmpty()) {
+        if (args.isNullOrEmpty()) return false
+        if (sender is Player) {
             val farmer: Farmer
             val name: String
             if (args.size == 1) {

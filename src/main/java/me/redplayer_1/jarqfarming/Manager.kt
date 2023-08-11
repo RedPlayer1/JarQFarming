@@ -2,6 +2,8 @@ package me.redplayer_1.jarqfarming
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.redplayer_1.jarqfarming.farming.Farmer
+import me.redplayer_1.jarqfarming.farming.Hoe
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -9,10 +11,10 @@ import org.bukkit.inventory.Inventory
 import java.io.File
 import java.util.*
 
-object Manager { //contains utility functions and data
+internal object Manager { //contains utility functions and data
     private val json = Json { allowStructuredMapKeys = true } //NOTE: this should be used for all (de)serialization
     val farmers: MutableMap<Player, Farmer> = mutableMapOf()
-    val hoe_levels: List<Hoe.Level> = json.decodeFromString(JarQFarming.HOE_LEVELS.readText())
+    val hoe_levels: List<Hoe.Level> = json.decodeFromString(JarQFarming.HOE_LEVELS!!.readText())
 
     /**
      * Serializes all registered farmers and then clears the registry
@@ -21,7 +23,7 @@ object Manager { //contains utility functions and data
         //serialize all farmer instances to a file named with their UUID
         //should only be run on plugin disable
         for (entry in farmers.entries) {
-            File(JarQFarming.FARMER_FOLDER.path + "/" + entry.key.uniqueId + ".json").writeText(
+            File(JarQFarming.FARMER_FOLDER!!.path + "/" + entry.key.uniqueId + ".json").writeText(
                 json.encodeToString(
                     entry.value
                 )
@@ -36,9 +38,9 @@ object Manager { //contains utility functions and data
      */
     fun saveFarmer(player: Player) {
         if (farmers[player] != null) {
-            File(JarQFarming.FARMER_FOLDER.path + "/" + player.uniqueId + ".json").writeText(json.encodeToString(farmers[player]))
+            File(JarQFarming.FARMER_FOLDER!!.path + "/" + player.uniqueId + ".json").writeText(json.encodeToString(farmers[player]))
         } else {
-            JarQFarming.INSTANCE.logger.warning("${player.name}'s farming data wasn't saved because there was no farmer associated with them.")
+            JarQFarming.INSTANCE!!.logger.warning("${player.name}'s farming data wasn't saved because there was no farmer associated with them.")
         }
     }
 
@@ -51,10 +53,17 @@ object Manager { //contains utility functions and data
      * @return The farmer for this player (farmer will have no stats if it doesn't exist)
      */
     fun loadFarmer(uuid: UUID): Farmer {
-        val file = File(JarQFarming.FARMER_FOLDER.path + "/" + uuid + ".json")
+        //check if the player is already in the registry
+        val player = Bukkit.getPlayer(uuid)?.player
+        if (player != null && farmers.containsKey(player)) {
+            return farmers[player]!!
+        }
+        //get data from the file
+        val file = File(JarQFarming.FARMER_FOLDER!!.path + "/" + uuid + ".json")
         return if (file.exists()) {
             json.decodeFromString<Farmer>(file.readText())
         } else {
+            //player never joined the server
             Farmer()
         }
     }

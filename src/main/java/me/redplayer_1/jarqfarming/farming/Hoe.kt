@@ -1,7 +1,10 @@
-package me.redplayer_1.jarqfarming
+package me.redplayer_1.jarqfarming.farming
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import me.redplayer_1.jarqfarming.JarQFarming
+import me.redplayer_1.jarqfarming.Manager
+import me.redplayer_1.jarqfarming.amountOf
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -12,7 +15,7 @@ import org.bukkit.persistence.PersistentDataType
 @Serializable
 class Hoe(@Serializable var currentLevel: Int = 0) {
     companion object {
-        @Transient val namespacedKey = NamespacedKey(JarQFarming.INSTANCE, "HOE")
+        @Transient val namespacedKey = NamespacedKey(JarQFarming.INSTANCE!!, "HOE")
     }
     private val hoeUpgradeBorder = "<bold><yellow>-------------------</yellow></bold>"
     private val hoeUpgradeEntryTrue = "<newline><dark_green><bold>\uD83D\uDDF8</bold><i> %s</i> <white>- (<green>%d<gold>/<green>%d)" //name, (amount, neededAmount)

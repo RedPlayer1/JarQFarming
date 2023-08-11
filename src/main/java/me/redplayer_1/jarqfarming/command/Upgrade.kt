@@ -1,6 +1,6 @@
 package me.redplayer_1.jarqfarming.command
 
-import me.redplayer_1.jarqfarming.Hoe
+import me.redplayer_1.jarqfarming.farming.Hoe
 import me.redplayer_1.jarqfarming.Manager
 import org.bukkit.Sound
 import org.bukkit.command.Command
@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
-class Upgrade: TabExecutor {
+internal class Upgrade: TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (sender !is Player) {
             sender.sendPlainMessage("You must be a player to run this command!")

@@ -1,6 +1,7 @@
-package me.redplayer_1.jarqfarming
+package me.redplayer_1.jarqfarming.farming
 
 import kotlinx.serialization.Serializable
+import me.redplayer_1.jarqfarming.JarQFarming
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
@@ -64,7 +65,7 @@ data class Farmer(
             fMeta.addEffect(FireworkEffect.builder().trail(false).flicker(false).with(FireworkEffect.Type.STAR).withColor(Color.RED).build())
             fMeta.power = 0
             f.fireworkMeta = fMeta
-            f.setMetadata("nodamage", FixedMetadataValue(JarQFarming.INSTANCE, true))
+            f.setMetadata("nodamage", FixedMetadataValue(JarQFarming.INSTANCE!!, true))
             f.detonate()
         }
     }

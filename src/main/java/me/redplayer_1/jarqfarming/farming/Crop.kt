@@ -1,4 +1,4 @@
-package me.redplayer_1.jarqfarming
+package me.redplayer_1.jarqfarming.farming
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

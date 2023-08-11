@@ -1,10 +1,10 @@
 package me.redplayer_1.jarqfarming.event
 
-import me.redplayer_1.jarqfarming.Crop
-import me.redplayer_1.jarqfarming.Hoe
+import me.redplayer_1.jarqfarming.farming.Crop
+import me.redplayer_1.jarqfarming.farming.Hoe
+import me.redplayer_1.jarqfarming.JarQFarming
 import me.redplayer_1.jarqfarming.Manager
 import net.citizensnpcs.api.event.NPCClickEvent
-import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.data.Ageable
 import org.bukkit.entity.Firework
@@ -12,12 +12,13 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
-class EventManager : Listener {
-    private val hoeUpgradeNPCName = "Upgrade Hoe"
+internal class EventManager : Listener {
+    //private val hoeUpgradeNPCName = "Upgrade Hoe"
 
     @EventHandler
     fun blockBreak(event: BlockBreakEvent) {
@@ -34,17 +35,17 @@ class EventManager : Listener {
             }
             event.isCancelled = true
         }
-
     }
 
     @EventHandler
     fun playerJoin(event: PlayerJoinEvent) {
         val player = event.player
-        val farmer = Manager.loadFarmer(player.uniqueId)
-        Manager.farmers[player] = farmer
-        player.inventory.clear()
-        player.inventory.setItemInMainHand(farmer.hoe.item())
-        //TODO: check compatibility with PerWorldPlugins (https://dev.bukkit.org/projects/perworldplugins-updated)
+        if (player.world.name == JarQFarming.WORLD_NAME) {
+            val farmer = Manager.loadFarmer(player.uniqueId)
+            Manager.farmers[player] = farmer
+            player.inventory.clear()
+            player.inventory.setItemInMainHand(farmer.hoe.item())
+        }
     }
 
     @EventHandler
@@ -72,6 +73,23 @@ class EventManager : Listener {
     fun dropItem(event: PlayerDropItemEvent) {
         if (event.itemDrop.itemStack.itemMeta.persistentDataContainer.has(Hoe.namespacedKey)) {
             event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun worldChange(event: PlayerChangedWorldEvent) {
+        if (event.from.name == JarQFarming.WORLD_NAME) {
+            Manager.saveFarmer(event.player)
+            Manager.farmers.remove(event.player)
+            event.player.inventory.clear()
+            return
+        }
+        if (event.player.world.name == JarQFarming.WORLD_NAME) {
+            val player = event.player
+            val farmer = Manager.loadFarmer(player.uniqueId)
+            Manager.farmers[player] = farmer
+            player.inventory.clear()
+            player.inventory.setItemInMainHand(farmer.hoe.item())
         }
     }
 }
