@@ -35,6 +35,6 @@ internal class Upgrade: TabExecutor {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>?): MutableList<String>? {
-        return mutableListOf()
+        return null
     }
 }

@@ -25,13 +25,13 @@ data class Farmer(
     var xp: Int = 0,
     var money: Int = 0,
     var shards: Int = 0,
+    var farmingFortune: Int = 0,
     var hoe: Hoe = Hoe()
 ) {
     private val baseXp = 10
     private val baseMoney = 15
     private val baseShards = 3
     var maxXp = baseXp + floor(.8 * level.toDouble().pow(3)).toInt()
-    private var farmingFortune = 0
     var collections: MutableMap<Crop, Collection> = mutableMapOf()
 
     init {
@@ -74,7 +74,7 @@ data class Farmer(
         maxXp = baseXp + ceil(.7 * level.toDouble().pow(3)).toInt()
         val rewardShards = baseShards + level + level * baseShards
         val rewardMoney = baseMoney + ceil(.2 * level.toDouble().pow(3)).toInt()
-        val rewardFortune = 1 //TODO: make formula
+        val rewardFortune = 1 + ceil(level * .2).toInt()
         level++
         shards += rewardShards
         money += rewardMoney
