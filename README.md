@@ -23,7 +23,7 @@ Add the dependency
 <dependency>
     <groupId>com.github.RedPlayer1</groupId>
     <artifactId>JarQFarming</artifactId>
-    <version>Tag</version>
+    <version>v1.1.0</version>
 </dependency>
 ```
 #### Gradle
