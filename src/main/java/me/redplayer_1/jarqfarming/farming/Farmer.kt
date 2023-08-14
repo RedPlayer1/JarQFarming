@@ -2,6 +2,7 @@ package me.redplayer_1.jarqfarming.farming
 
 import kotlinx.serialization.Serializable
 import me.redplayer_1.jarqfarming.JarQFarming
+import me.redplayer_1.jarqfarming.capitalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
@@ -18,6 +19,9 @@ import kotlin.math.pow
 import kotlin.math.round
 import kotlin.random.Random
 
+/**
+ * A Farmer represents a player (with some extra data) that is in the specified farming world
+ */
 @Serializable
 data class Farmer(
     var prestige: Int = 0,
@@ -25,13 +29,14 @@ data class Farmer(
     var xp: Int = 0,
     var money: Int = 0,
     var shards: Int = 0,
+    var farmingFortune: Int = 0,
     var hoe: Hoe = Hoe()
 ) {
     private val baseXp = 10
     private val baseMoney = 15
     private val baseShards = 3
+    private val maxLevel = JarQFarming.CONFIG?.getInt("max_farmer_level", 100)!!
     var maxXp = baseXp + floor(.8 * level.toDouble().pow(3)).toInt()
-    private var farmingFortune = 0
     var collections: MutableMap<Crop, Collection> = mutableMapOf()
 
     init {
@@ -42,6 +47,12 @@ data class Farmer(
         }
     }
 
+    /**
+     * Make the farmer farm a crop
+     * @param crop the [Crop] to farm
+     * @param player the [Player] tied to this farmer
+     * @param addCollection whether the harvested crops should be counted in the farmer's [Collection]
+     */
     fun farm(crop: Crop, player: Player, addCollection: Boolean = true) {
         //returns an action bar to be shown to the player
         val addedXp = Random.nextInt(crop.expRange.first, crop.expRange.second)
@@ -50,11 +61,10 @@ data class Farmer(
         xp += addedXp
         money += addedMoney
         if (addCollection) collections[crop]?.let { it.broken++; it.collected += harvestedCrops}
-        player.sendActionBar(Component.text("§6+ §e$harvestedCrops §6 ${crop.type.name.replace("_", " ").lowercase().capitalize() /*yes it's deprecated idc */} | §5+ §d$addedXp §5xp §7| §a+ §2$§a$addedMoney"))
+        player.sendActionBar(Component.text("§6+ §e$harvestedCrops §6 ${crop.type.name.replace("_", " ").capitalize()} §f| §5+ §d$addedXp §5xp §7§f| §a+ §2$§a$addedMoney"))
 
         //check if farmer is eligible for level up
-        while (xp >= maxXp) {
-            xp -= maxXp
+        while (xp >= maxXp && level <= maxLevel) {
             val lvlUp = levelUp()
             player.sendRichMessage(lvlUp[0])
             player.showTitle(Title.title(MiniMessage.miniMessage().deserialize(lvlUp[1]), MiniMessage.miniMessage().deserialize(lvlUp[2])))
@@ -70,11 +80,16 @@ data class Farmer(
         }
     }
 
+    /**
+     * Increments the farmer's level, recalculates the needed xp and rewards the farmer
+     * @return An array of strings in the mini-message format: `[0] = chat message [1] = mainTitle [2] = subTitle`
+     */
     private fun levelUp(): Array<String> {
+        xp -= maxXp
         maxXp = baseXp + ceil(.7 * level.toDouble().pow(3)).toInt()
         val rewardShards = baseShards + level + level * baseShards
         val rewardMoney = baseMoney + ceil(.2 * level.toDouble().pow(3)).toInt()
-        val rewardFortune = 1 //TODO: make formula
+        val rewardFortune = 1 + ceil(level * .2).toInt()
         level++
         shards += rewardShards
         money += rewardMoney

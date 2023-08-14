@@ -1,7 +1,8 @@
 package me.redplayer_1.jarqfarming.command
 
-import me.redplayer_1.jarqfarming.farming.Farmer
 import me.redplayer_1.jarqfarming.Manager
+import me.redplayer_1.jarqfarming.capitalize
+import me.redplayer_1.jarqfarming.farming.Farmer
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

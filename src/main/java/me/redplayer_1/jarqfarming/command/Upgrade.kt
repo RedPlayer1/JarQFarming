@@ -1,7 +1,7 @@
 package me.redplayer_1.jarqfarming.command
 
-import me.redplayer_1.jarqfarming.farming.Hoe
 import me.redplayer_1.jarqfarming.Manager
+import me.redplayer_1.jarqfarming.farming.Hoe
 import org.bukkit.Sound
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -19,7 +19,7 @@ internal class Upgrade: TabExecutor {
             return true
         }
         if ((sender as Player).inventory.itemInMainHand.itemMeta.persistentDataContainer.has(Hoe.namespacedKey)) {
-            val upgradeChecks = farmer.hoe.isUpgradable(farmer, sender.inventory)
+            val upgradeChecks = farmer.hoe.isUpgradable(farmer, sender.inventory, true)
             if (upgradeChecks.first) {
                 farmer.hoe.currentLevel++
                 sender.playSound(sender.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
@@ -35,6 +35,6 @@ internal class Upgrade: TabExecutor {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>?): MutableList<String>? {
-        return mutableListOf()
+        return null
     }
 }

@@ -11,10 +11,19 @@ import org.bukkit.inventory.Inventory
 import java.io.File
 import java.util.*
 
-internal object Manager { //contains utility functions and data
+/**
+ * A utility class for common data & functions
+ */
+internal object Manager {
     private val json = Json { allowStructuredMapKeys = true } //NOTE: this should be used for all (de)serialization
     val farmers: MutableMap<Player, Farmer> = mutableMapOf()
-    val hoe_levels: List<Hoe.Level> = json.decodeFromString(JarQFarming.HOE_LEVELS!!.readText())
+    val hoe_levels: MutableMap<Int, Hoe.Level> = mutableMapOf()
+
+    init {
+        for (i in json.decodeFromString<List<Hoe.Level>>(JarQFarming.HOE_LEVELS!!.readText())) {
+            hoe_levels[i.level] = i
+        }
+    }
 
     /**
      * Serializes all registered farmers and then clears the registry
@@ -46,9 +55,9 @@ internal object Manager { //contains utility functions and data
 
 
     /**
-     * Deserialize the farmer instance associated with the provided UUID
+     * Deserialize the farmer instance associated with the provided [UUID]
      *
-     * NOTE: this doesn't add the Farmer to the registry!
+     * NOTE: this doesn't add the Farmer to the registry! [uuid]
      * @param uuid The UUID of the player
      * @return The farmer for this player (farmer will have no stats if it doesn't exist)
      */
@@ -79,4 +88,14 @@ fun Inventory.amountOf(vararg materials: Material): Map<Material, Int> {
     materials.forEach { amounts[it] = 0 }
     contents.forEach { if (it != null && materials.contains(it.type)) amounts[it.type] = amounts[it.type]!! + it.amount }
     return amounts
+}
+
+/**
+ * Makes the string lowercase, then capitalizes the first character
+ */
+fun String.capitalize(): String {
+    var str = this
+    str = str.lowercase(Locale.getDefault())
+    str = str.replaceFirstChar{ if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    return str
 }
