@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/RedPlayer1/JarQFarming.svg)](https://jitpack.io/#RedPlayer1/JarQFarming)
 # JarQFarming
 Farming plugin for the JarQ minehut server
 ## How To Use
@@ -7,7 +8,7 @@ Farming plugin for the JarQ minehut server
 3. Open `<plugins folder>/JarQFarming/config.yml`
 4. Fill out any missing values and reload/restart the server
 5. Start Farming!
-### API [![](https://jitpack.io/v/RedPlayer1/JarQFarming.svg)](https://jitpack.io/#RedPlayer1/JarQFarming)
+### API
 The [`FarmingAPI.kt`](https://github.com/RedPlayer1/JarQFarming/blob/master/src/main/java/me/redplayer_1/jarqfarming/FarmingAPI.kt) object should contain everything you need.
 #### Maven
 Add the repository
