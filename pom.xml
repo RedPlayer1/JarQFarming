@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.redplayer_1</groupId>
-    <artifactId>JarqFarming</artifactId>
+    <artifactId>JarQFarming</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <developers>
@@ -14,9 +14,9 @@
         </developer>
     </developers>
 
-    <name>JarqFarming</name>
+    <name>JarQFarming</name>
 
-    <description>Farming plugin for the Jarq server</description>
+    <description>Farming plugin for the JarQ server</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

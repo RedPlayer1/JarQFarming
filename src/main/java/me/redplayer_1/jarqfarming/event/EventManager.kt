@@ -1,21 +1,18 @@
 package me.redplayer_1.jarqfarming.event
 
-import me.redplayer_1.jarqfarming.farming.Crop
-import me.redplayer_1.jarqfarming.farming.Hoe
 import me.redplayer_1.jarqfarming.JarQFarming
 import me.redplayer_1.jarqfarming.Manager
-import net.citizensnpcs.api.event.NPCClickEvent
+import me.redplayer_1.jarqfarming.farming.Crop
+import me.redplayer_1.jarqfarming.farming.Hoe
 import org.bukkit.Sound
 import org.bukkit.block.data.Ageable
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.*
 
 internal class EventManager : Listener {
     //private val hoeUpgradeNPCName = "Upgrade Hoe"
@@ -53,15 +50,17 @@ internal class EventManager : Listener {
         Manager.saveFarmer(event.player)
         Manager.farmers.remove(event.player)
     }
-
+/*
     @EventHandler
     fun npcClick(event: NPCClickEvent) {
         //if (event.npc.name.equals(hoeUpgradeNPCName, true))
     }
 
+ */
+
     @EventHandler
     fun entityDamageEntity(event: EntityDamageByEntityEvent) {
-        //to allow for the creation of fireworks that don't deal damage upon exploding (without using nms)
+        //to allow for the creation of fireworks that don't deal damage upon exploding
         if (event.damager is Firework) {
             if ((event.damager as Firework).hasMetadata("nodamage")) {
                 event.isCancelled = true
@@ -78,6 +77,7 @@ internal class EventManager : Listener {
 
     @EventHandler
     fun worldChange(event: PlayerChangedWorldEvent) {
+        //doesn't fire on world leave if PerWorldPlugins is enabled
         if (event.from.name == JarQFarming.WORLD_NAME) {
             Manager.saveFarmer(event.player)
             Manager.farmers.remove(event.player)
@@ -90,6 +90,14 @@ internal class EventManager : Listener {
             Manager.farmers[player] = farmer
             player.inventory.clear()
             player.inventory.setItemInMainHand(farmer.hoe.item())
+        }
+    }
+
+    @EventHandler
+    fun playerInteract(event: PlayerInteractEvent) {
+        //prevent players from trampling crops (also stops tripwires, pressure plates and redstone ore)
+        if (event.action == Action.PHYSICAL) {
+            event.isCancelled = true
         }
     }
 }

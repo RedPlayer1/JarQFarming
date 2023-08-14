@@ -1,3 +1,5 @@
 # !! MUST BE SET !!
 #case sensitive
 farming_world_name:
+max_farmer_level: 200
+max_hoe_level: 100
