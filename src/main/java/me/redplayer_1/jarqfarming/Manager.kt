@@ -15,7 +15,7 @@ import java.util.*
  * A utility class for common data & functions
  */
 internal object Manager {
-    private val json = Json { allowStructuredMapKeys = true } //NOTE: this should be used for all (de)serialization
+    val json = Json { allowStructuredMapKeys = true }//NOTE: this should be used for all (de)serialization
     val farmers: MutableMap<Player, Farmer> = mutableMapOf()
     val hoe_levels: MutableMap<Int, Hoe.Level> = mutableMapOf()
 
@@ -32,11 +32,7 @@ internal object Manager {
         //serialize all farmer instances to a file named with their UUID
         //should only be run on plugin disable
         for (entry in farmers.entries) {
-            File(JarQFarming.FARMER_FOLDER!!.path + "/" + entry.key.uniqueId + ".json").writeText(
-                json.encodeToString(
-                    entry.value
-                )
-            )
+            saveFarmer(entry.key)
         }
         farmers.clear()
     }
@@ -47,7 +43,7 @@ internal object Manager {
      */
     fun saveFarmer(player: Player) {
         if (farmers[player] != null) {
-            File(JarQFarming.FARMER_FOLDER!!.path + "/" + player.uniqueId + ".json").writeText(json.encodeToString(farmers[player]))
+            return FarmingAPI.serializer.save(player.uniqueId, farmers[player]!!)
         } else {
             JarQFarming.INSTANCE!!.logger.warning("${player.name}'s farming data wasn't saved because there was no farmer associated with them.")
         }
@@ -67,13 +63,23 @@ internal object Manager {
         if (player != null && farmers.containsKey(player)) {
             return farmers[player]!!
         }
-        //get data from the file
-        val file = File(JarQFarming.FARMER_FOLDER!!.path + "/" + uuid + ".json")
-        return if (file.exists()) {
-            json.decodeFromString<Farmer>(file.readText())
-        } else {
-            //player never joined the server
-            Farmer()
+        return FarmingAPI.serializer.load(uuid)
+    }
+
+    object DefaultSerializer: FarmerSerializer {
+        override fun save(uuid: UUID, farmer: Farmer) {
+            File(JarQFarming.FARMER_FOLDER!!.path + "/" + uuid + ".json").writeText(json.encodeToString(farmer))
+        }
+
+        override fun load(uuid: UUID): Farmer {
+            //get data from the file
+            val file = File(JarQFarming.FARMER_FOLDER!!.path + "/" + uuid + ".json")
+            return if (file.exists()) {
+                json.decodeFromString<Farmer>(file.readText())
+            } else {
+                //player never joined the server
+                Farmer()
+            }
         }
     }
 }

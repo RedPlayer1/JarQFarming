@@ -14,8 +14,11 @@ class JarQFarming : JavaPlugin() {
     private val dataFolderPath = dataFolder.absolutePath
     override fun onEnable() {
         //TODO: migrate javadocs to kdocs
-        //TODO: load online players into farmer registry (on reload)
-        //TODO: cooldown command (implements tabexecutor)
+        // load online players into farmer registry (on reload)
+        // auto-update system
+        // leaderboards (level, collections)
+        // PlaceholerAPI integration
+        // cooldown command (implements tabexecutor)
 
         // Data files
         INSTANCE = this
